@@ -1,0 +1,2 @@
+#npm install mongodb
+#pip install python-jose passlib[bcrypt] motor
