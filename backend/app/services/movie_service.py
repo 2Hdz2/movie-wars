@@ -18,10 +18,28 @@ async def get_movies():
 #Get a movie
 async def get_movie(movie_id: str):
     movie = await db.movies.find_one({"_id": ObjectId(movie_id)})
-    if movie:
-        movie["id"] = str(movie["_id"])
-    return movie
 
+    if not movie:
+        return None
+
+    # serialize movie
+    movie["id"] = str(movie["_id"])
+    movie.pop("_id", None)
+
+    # fetch reviews
+    raw_reviews = await db.reviews.find({"movie_id": ObjectId(movie_id)}).to_list(None)
+
+    reviews = []
+    for r in raw_reviews:
+        r["id"] = str(r["_id"])
+        r["movie_id"] = str(r["movie_id"])
+        r["user_id"] = str(r["user_id"])
+        r.pop("_id", None)
+        reviews.append(r)
+
+    movie["reviews"] = reviews
+
+    return movie
 #update 
 async def update_movie(movie_id:str, data):
     await db.movies.update_one(
