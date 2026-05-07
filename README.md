@@ -13,3 +13,6 @@
 
 To load the backend 
  python -m uvicorn main:app --reload --port 8001 
+
+Theme
+Hot pink and black
